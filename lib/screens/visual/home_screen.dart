@@ -9,6 +9,7 @@ import 'package:senseplay/screens/visual/call_assistant_screen.dart';
 import 'package:senseplay/screens/visual/live_subtitles_screen.dart';
 import 'package:senseplay/screens/visual/sign_world_screen.dart';
 import 'package:senseplay/screens/visual/sound_watch_screen.dart';
+import 'package:senseplay/screens/assistant_screen.dart';
 import 'package:senseplay/services/hardware_service.dart';
 import 'package:senseplay/services/voice_command_service.dart';
 import 'package:senseplay/theme/app_theme.dart';
@@ -84,6 +85,18 @@ class _VisualHomeScreenState extends State<VisualHomeScreen>
       ),
       voiceCommand: 'sign_world',
     ),
+    _FeatureItem(
+      title: "AI Assistant",
+      subtitle: "Your personal helper",
+      icon: Icons.assistant_rounded,
+      color: const Color(0xFF00BCD4),
+      gradient: const LinearGradient(
+        colors: [Color(0xFF00BCD4), Color(0xFF26A69A)],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      ),
+      voiceCommand: 'assistant',
+    ),
   ];
 
   @override
@@ -116,6 +129,9 @@ class _VisualHomeScreenState extends State<VisualHomeScreen>
           break;
         case 'sign_world':
           _highlightAndNavigate(3);
+          break;
+        case 'assistant':
+          _highlightAndNavigate(4);
           break;
         case 'go_back':
         case 'go_home':
@@ -199,6 +215,9 @@ class _VisualHomeScreenState extends State<VisualHomeScreen>
         break;
       case 3: // Sign World
         screen = const SignWorldScreen();
+        break;
+      case 4: // AI Assistant
+        screen = const AssistantScreen();
         break;
       default:
         return;

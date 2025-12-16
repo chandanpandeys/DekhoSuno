@@ -15,6 +15,8 @@ import 'package:senseplay/services/hardware_service.dart';
 import 'package:senseplay/services/voice_command_service.dart';
 import 'package:senseplay/theme/app_theme.dart';
 import 'package:senseplay/screens/assistant_screen.dart';
+import 'package:senseplay/screens/audio/mini_map_screen.dart';
+import 'package:senseplay/screens/audio/road_crossing_screen.dart';
 import 'package:vibration/vibration.dart';
 
 /// Premium Audio Mode Home Screen
@@ -93,6 +95,22 @@ class _AudioHomeScreenState extends State<AudioHomeScreen>
       hindiDescription: "Apna personal assistant",
       voiceCommand: 'assistant',
     ),
+    _FeatureInfo(
+      name: "Mini Map",
+      icon: Icons.map_rounded,
+      color: const Color(0xFF3F51B5),
+      gesture: "Triple Tap",
+      hindiDescription: "Jagah ka navigation",
+      voiceCommand: 'mini_map',
+    ),
+    _FeatureInfo(
+      name: "Road Crossing",
+      icon: Icons.traffic_rounded,
+      color: const Color(0xFFE91E63),
+      gesture: "Two-Finger Tap",
+      hindiDescription: "Road paar karne mein madad",
+      voiceCommand: 'road_crossing',
+    ),
   ];
 
   @override
@@ -139,6 +157,14 @@ class _AudioHomeScreenState extends State<AudioHomeScreen>
         case 'assistant':
           await _flutterTts.speak("Assistant khol raha hoon");
           _openAssistant();
+          break;
+        case 'mini_map':
+          await _flutterTts.speak("Map khol raha hoon");
+          _openMiniMap();
+          break;
+        case 'road_crossing':
+          await _flutterTts.speak("Road crossing khol raha hoon");
+          _openRoadCrossing();
           break;
         case 'go_back':
         case 'go_home':
@@ -344,6 +370,20 @@ class _AudioHomeScreenState extends State<AudioHomeScreen>
     _hapticAndSpeak("AI Assistant", "Assistant khul raha hai");
     Navigator.of(context).push(
       _createRoute(const AssistantScreen()),
+    );
+  }
+
+  void _openMiniMap() {
+    _hapticAndSpeak("Mini Map", "Map khul raha hai");
+    Navigator.of(context).push(
+      _createRoute(const MiniMapScreen()),
+    );
+  }
+
+  void _openRoadCrossing() {
+    _hapticAndSpeak("Road Crossing", "Road crossing assistant khul raha hai");
+    Navigator.of(context).push(
+      _createRoute(const RoadCrossingScreen()),
     );
   }
 

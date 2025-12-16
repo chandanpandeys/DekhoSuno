@@ -363,6 +363,32 @@ class _CallAssistantScreenState extends State<CallAssistantScreen>
               color: AppColors.visualTextMuted,
             ),
           ),
+          const SizedBox(height: 16),
+          // Speakerphone requirement notice
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 24),
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.orange.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.orange.withOpacity(0.3)),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.volume_up, color: Colors.orange, size: 24),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    "⚠️ SPEAKERPHONE REQUIRED\nPut your call on speaker so the mic can hear the other person.",
+                    style: AppTypography.bodySmall.copyWith(
+                      color: Colors.orange.shade800,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
