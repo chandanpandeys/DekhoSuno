@@ -1,0 +1,81 @@
+# Miscellaneous
+*.class
+*.log
+*.lock
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to share with your colleagues.
+.vscode/flutter.code-workspace
+.vscode/launch.json
+.vscode/tasks.json
+
+# Flutter/Dart/Pub related
+**/doc/api/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+flutter_*.png
+
+# Web related
+lib/generated_plugin_registrant.dart
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map-json
+
+# Android Studio will place build artifacts here
+**/android/app/build
+**/android/.gradle
+**/android/captures/
+**/android/gradlew
+**/android/gradlew.bat
+**/android/local.properties
+**/android/generated/
+**/android/key.properties
+
+# iOS extensions
+**/ios/*.mode1v3
+**/ios/*.mode2v3
+**/ios/*.moved-aside
+**/ios/*.pbxuser
+**/ios/*.perspectivev3
+**/ios/*.xcworkspace
+**/ios/flutter_assets/
+**/ios/Flutter/App.framework
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/flutter_assets/
+**/ios/Flutter/flutter_export_environment.sh
+**/ios/ServiceDefinitions.json
+**/ios/Runner/k8s/
+**/ios/Runner/generated/
+
+# Exceptions to above rules.
+!**/ios/Runner/Base.lproj/LaunchScreen.storyboard
+!**/ios/Runner/Base.lproj/Main.storyboard
+!**/ios/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json
+!**/ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json
+!**/ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md
+
+# Environment variables
+.env

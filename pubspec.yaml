@@ -1,0 +1,87 @@
+name: senseplay
+description: An adaptive mobile application for children with sensory impairments.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.2.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # Core
+  cupertino_icons: ^1.0.6
+  permission_handler: ^11.3.0
+  flutter_dotenv: ^5.1.0
+  
+  # AI & ML
+  google_generative_ai: ^0.2.0
+  google_mlkit_commons: ^0.6.0
+  google_mlkit_object_detection: ^0.11.0
+  google_mlkit_text_recognition: ^0.11.0
+  
+  # Vision & Camera
+  camera: ^0.10.5+9
+  
+  # Audio & Voice
+  flutter_tts: ^3.8.5
+  speech_to_text: ^7.3.0
+  
+  # Wake Word Detection (Porcupine)
+  porcupine_flutter: ^3.0.3
+  
+  # Background Service
+  flutter_foreground_task: ^8.7.0
+  
+  # Haptics
+  vibration: ^3.1.4
+  google_mlkit_image_labeling: ^0.10.0
+  google_mlkit_translation: ^0.9.0
+  shared_preferences: ^2.5.3
+
+  # State Management
+  provider: ^6.1.1
+
+  # System & Hardware
+  system_alert_window: ^2.0.7
+  sensors_plus: ^5.0.1
+  light_sensor: any
+  flutter_fgbg: ^0.3.0
+  path_provider: ^2.1.1
+  
+  # Networking
+  http: ^1.2.0
+  url_launcher: ^6.3.2
+  
+  # Maps & Location
+  geolocator: ^10.1.0
+  flutter_map: ^6.1.0
+  latlong2: ^0.9.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+  flutter_launcher_icons: ^0.14.1
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  web:
+    generate: true
+  windows:
+    generate: true
+  macos:
+    generate: true
+  image_path: "assets/images/logo.png"
+  adaptive_icon_foreground: "assets/images/logo.png"
+  adaptive_icon_background: "#5B67CA"
+
+flutter:
+  uses-material-design: true
+  assets:
+    - .env
+    - assets/images/
+    - assets/models/
+    - assets/help-decko-sueno_en_android_v4_0_0.ppn
