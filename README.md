@@ -40,6 +40,12 @@ Both modes feature a **common AI Assistant** accessible anytime via the wake wor
 
 ## 🏗️ Architecture
 
+<div align="center">
+  <img src="assets/images/flowchart.png" alt="DekhoSuno App Architecture Flowchart" width="800" />
+  <br/>
+  <i>Application Architecture & Feature Flow</i>
+</div>
+
 ### Application Flow
 
 ```mermaid
@@ -113,6 +119,15 @@ flowchart TB
 
 ### Technology Stack
 
+<div align="center">
+  <img src="assets/images/tech_stack.png" alt="DekhoSuno Technology Stack" width="800" />
+  <br/>
+  <i>Technologies Powering DekhoSuno</i>
+</div>
+
+<details>
+<summary>View Interactive Tech Stack Diagram</summary>
+
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#3B82F6', 'primaryTextColor': '#fff'}}}%%
 flowchart LR
@@ -149,6 +164,8 @@ flowchart LR
     style Voice fill:#10B981,stroke:#059669,stroke-width:2px
     style Hardware fill:#F59E0B,stroke:#D97706,stroke-width:2px
 ```
+
+</details>
 
 ---
 
