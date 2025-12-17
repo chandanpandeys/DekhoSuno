@@ -9,7 +9,8 @@ import 'package:vibration/vibration.dart';
 /// AI Assistant Screen
 /// Conversational AI with notes, reminders, and app control
 class AssistantScreen extends StatefulWidget {
-  const AssistantScreen({super.key});
+  final bool isInSunoMode;
+  const AssistantScreen({super.key, this.isInSunoMode = false});
 
   @override
   State<AssistantScreen> createState() => _AssistantScreenState();
@@ -23,11 +24,16 @@ class _AssistantScreenState extends State<AssistantScreen> {
 
   late AssistantService _assistantService;
   bool _isListening = false;
+  bool _isInSunoMode = false;
+  bool _autoListenEnabled = true;
+  bool _isSpeaking = false;
 
   @override
   void initState() {
     super.initState();
     _assistantService = AssistantService();
+    // Check if we're in Suno mode via widget param or settings
+    _isInSunoMode = widget.isInSunoMode;
     _initializeAssistant();
   }
 
@@ -57,6 +63,21 @@ class _AssistantScreenState extends State<AssistantScreen> {
 
   Future<void> _speak(String text) async {
     await Vibration.vibrate(duration: 50);
+    _isSpeaking = true;
+
+    // Set up completion handler for auto-listen in Suno mode
+    _tts.setCompletionHandler(() {
+      _isSpeaking = false;
+      if (_isInSunoMode && _autoListenEnabled && mounted && !_isListening) {
+        // Small delay before starting to listen again
+        Future.delayed(const Duration(milliseconds: 600), () {
+          if (mounted && !_isSpeaking && !_isListening) {
+            _startVoiceInput();
+          }
+        });
+      }
+    });
+
     await _tts.speak(text);
   }
 

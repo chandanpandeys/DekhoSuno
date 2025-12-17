@@ -11,6 +11,7 @@ class VoiceCommandService extends ChangeNotifier {
   bool _isInitialized = false;
   bool _isListening = false;
   bool _isAwake = false; // True when wake word detected
+  bool _continuousListening = false; // Auto-restart after timeout
   String _lastWords = '';
   String _currentCommand = '';
 
@@ -119,6 +120,7 @@ class VoiceCommandService extends ChangeNotifier {
 
     _isAwake = !waitForWakeWord;
     _isListening = true;
+    _continuousListening = true; // Enable auto-restart
     onListeningStateChange?.call(true);
     notifyListeners();
 
@@ -132,8 +134,9 @@ class VoiceCommandService extends ChangeNotifier {
     );
   }
 
-  /// Stop listening
+  /// Stop listening completely (disables auto-restart)
   Future<void> stopListening() async {
+    _continuousListening = false; // Disable auto-restart
     await _speechToText.stop();
     _isListening = false;
     _isAwake = false;
@@ -221,6 +224,16 @@ class VoiceCommandService extends ChangeNotifier {
       _isListening = false;
       onListeningStateChange?.call(false);
       notifyListeners();
+
+      // Auto-restart if continuous listening is enabled
+      if (_continuousListening) {
+        debugPrint('Auto-restarting listening...');
+        Future.delayed(const Duration(milliseconds: 500), () {
+          if (_continuousListening) {
+            startListening(waitForWakeWord: !_isAwake);
+          }
+        });
+      }
     }
   }
 

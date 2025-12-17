@@ -129,40 +129,34 @@ flowchart TB
 <summary>View Interactive Tech Stack Diagram</summary>
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#3B82F6', 'primaryTextColor': '#fff'}}}%%
 flowchart LR
-    subgraph Frontend["📱 Frontend"]
-        Flutter["Flutter 3.16+"]
-        Dart["Dart 3.2+"]
-        Provider["Provider<br/><i>State Management</i>"]
+    subgraph Frontend
+        Flutter[Flutter 3.16+]
+        Dart[Dart 3.2+]
+        Provider[Provider]
     end
     
-    subgraph AI["🤖 AI & ML"]
-        Gemini["Google Gemini<br/><i>Vision + Chat</i>"]
-        MLKit["ML Kit<br/><i>OCR, Object Detection</i>"]
-        Porcupine["Porcupine<br/><i>Wake Word</i>"]
+    subgraph AI[AI and ML]
+        Gemini[Google Gemini]
+        MLKit[ML Kit]
+        Porcupine[Porcupine Wake Word]
     end
     
-    subgraph Voice["🎤 Voice"]
-        TTS["Flutter TTS<br/><i>Text-to-Speech</i>"]
-        STT["Speech-to-Text<br/><i>Recognition</i>"]
+    subgraph Voice
+        TTS[Flutter TTS]
+        STT[Speech-to-Text]
     end
     
-    subgraph Hardware["📟 Hardware"]
-        Camera["Camera"]
-        Sensors["Sensors<br/><i>Light, Accelerometer</i>"]
-        Vibration["Haptic Feedback"]
-        GPS["Geolocator<br/><i>Location</i>"]
+    subgraph Hardware
+        Camera[Camera]
+        Sensors[Light & Accelerometer]
+        Vibration[Haptic Feedback]
+        GPS[Geolocator]
     end
     
     Frontend --> AI
     Frontend --> Voice
     Frontend --> Hardware
-
-    style Frontend fill:#3B82F6,stroke:#2563EB,stroke-width:2px
-    style AI fill:#8B5CF6,stroke:#7C3AED,stroke-width:2px
-    style Voice fill:#10B981,stroke:#059669,stroke-width:2px
-    style Hardware fill:#F59E0B,stroke:#D97706,stroke-width:2px
 ```
 
 </details>

@@ -4,25 +4,39 @@ import 'package:flutter/services.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 
 class HardwareService {
+  // Shake detection with cooldown to prevent repeated triggers
+  DateTime? _lastShakeTime;
+  static const Duration _shakeCooldown = Duration(seconds: 3);
+  static const double _shakeThreshold = 25;
+
   // Shake Detection
   Stream<bool> get onShake {
     return accelerometerEventStream().map((event) {
       double acceleration =
           (event.x * event.x) + (event.y * event.y) + (event.z * event.z);
-      return acceleration > (15 * 15); // Threshold > 15m/s^2
-    }).where((shake) => shake); // Only emit true
+
+      bool isShake = acceleration > (_shakeThreshold * _shakeThreshold);
+
+      if (isShake) {
+        final now = DateTime.now();
+        if (_lastShakeTime != null &&
+            now.difference(_lastShakeTime!) < _shakeCooldown) {
+          return false;
+        }
+        _lastShakeTime = now;
+        return true;
+      }
+      return false;
+    }).where((shake) => shake);
   }
 
   // Light Detection - Using accelerometer-based approximation
-  // Since light_sensor package has issues, we use screen brightness or simulate
-  // based on device movement (less movement = likely indoor/dark)
+  // Based on phone orientation (face-up = likely more light)
   Stream<int> get lightLevel {
-    // Create a variable simulation based on time and slight randomness
-    // to show the UI is working. In production, use platform channels.
     final random = math.Random();
     return accelerometerEventStream()
         .map((event) {
-          // Use Z-axis to detect if phone is face-up (toward light) or face-down
+          // Use Z-axis to detect if phone is face-up or face-down
           // Z close to 9.8 = face up (probably more light)
           // Z close to -9.8 = face down (probably dark)
           final zNormalized = (event.z + 10) / 20; // normalize to 0-1
@@ -30,8 +44,8 @@ class HardwareService {
           final variation = random.nextInt(100) - 50; // +/- 50 variation
           return (baseLux + variation).clamp(0, 2000);
         })
-        .distinct() // Only emit when value changes
-        .throttle(const Duration(milliseconds: 500)); // Limit updates
+        .distinct()
+        .throttle(const Duration(milliseconds: 500));
   }
 
   // Haptic Feedback

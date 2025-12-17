@@ -17,6 +17,7 @@ import 'package:senseplay/theme/app_theme.dart';
 import 'package:senseplay/screens/assistant_screen.dart';
 import 'package:senseplay/screens/audio/mini_map_screen.dart';
 import 'package:senseplay/screens/audio/road_crossing_screen.dart';
+import 'package:senseplay/widgets/ai_assistant_popup.dart';
 import 'package:vibration/vibration.dart';
 
 /// Premium Audio Mode Home Screen
@@ -41,6 +42,10 @@ class _AudioHomeScreenState extends State<AudioHomeScreen>
 
   String _currentHint = "Double Tap: Smart Camera";
   DateTime? _lastGestureTime;
+
+  // Tap counting for double/triple tap detection
+  int _tapCount = 0;
+  Timer? _tapTimer;
 
   // Voice command state
   bool _isVoiceListening = false;
@@ -246,13 +251,47 @@ class _AudioHomeScreenState extends State<AudioHomeScreen>
     _pulseController.dispose();
     _breatheController.dispose();
     _shakeSubscription?.cancel();
+    _tapTimer?.cancel();
     _flutterTts.stop();
     super.dispose();
   }
 
   void _handleTap() {
-    // Single tap - just provide haptic feedback
+    // Increment tap count
+    _tapCount++;
     HapticFeedback.lightImpact();
+
+    // Cancel any existing timer
+    _tapTimer?.cancel();
+
+    // Start a new timer to wait for more taps
+    // 400ms is enough time for user to do another tap
+    _tapTimer = Timer(const Duration(milliseconds: 400), () {
+      _processTaps(_tapCount);
+      _tapCount = 0; // Reset for next gesture
+    });
+  }
+
+  void _processTaps(int count) {
+    switch (count) {
+      case 1:
+        // Single tap - just feedback, already done in _handleTap
+        break;
+      case 2:
+        // Double tap - Smart Camera
+        _openSmartCamera();
+        break;
+      case 3:
+        // Triple tap - SOS
+        _triggerSOS();
+        break;
+      default:
+        // 4+ taps - treat as SOS
+        if (count >= 3) {
+          _triggerSOS();
+        }
+        break;
+    }
   }
 
   void _triggerSOS() async {
@@ -369,7 +408,7 @@ class _AudioHomeScreenState extends State<AudioHomeScreen>
   void _openAssistant() {
     _hapticAndSpeak("AI Assistant", "Assistant khul raha hai");
     Navigator.of(context).push(
-      _createRoute(const AssistantScreen()),
+      _createRoute(const AssistantScreen(isInSunoMode: true)),
     );
   }
 
@@ -438,7 +477,7 @@ class _AudioHomeScreenState extends State<AudioHomeScreen>
         body: GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: _handleTap,
-          onDoubleTap: _openSmartCamera,
+          // Note: onDoubleTap removed - using manual tap counting to support triple-tap
           onLongPress: _openCurrencyReader,
           onVerticalDragEnd: (details) {
             if (details.primaryVelocity == null) return;
@@ -487,8 +526,44 @@ class _AudioHomeScreenState extends State<AudioHomeScreen>
                   ],
                 ),
               ),
+
+              // Floating AI Assistant Button
+              Positioned(
+                right: 20,
+                bottom: 100,
+                child: _buildFloatingAIButton(),
+              ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFloatingAIButton() {
+    return GestureDetector(
+      onTap: () {
+        HapticFeedback.mediumImpact();
+        AIAssistantPopup.show(context, isAudioMode: true);
+      },
+      child: Container(
+        width: 64,
+        height: 64,
+        decoration: BoxDecoration(
+          gradient: AppColors.audioPrimaryGradient,
+          borderRadius: BorderRadius.circular(32),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.audioPrimary.withOpacity(0.5),
+              blurRadius: 16,
+              spreadRadius: 2,
+            ),
+          ],
+        ),
+        child: const Icon(
+          Icons.auto_awesome,
+          color: Colors.white,
+          size: 28,
         ),
       ),
     );

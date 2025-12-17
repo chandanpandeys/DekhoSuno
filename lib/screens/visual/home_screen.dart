@@ -13,6 +13,7 @@ import 'package:senseplay/screens/assistant_screen.dart';
 import 'package:senseplay/services/hardware_service.dart';
 import 'package:senseplay/services/voice_command_service.dart';
 import 'package:senseplay/theme/app_theme.dart';
+import 'package:senseplay/widgets/ai_assistant_popup.dart';
 import 'package:senseplay/widgets/interactive_widgets.dart';
 
 /// Premium Visual Mode Home Screen
@@ -265,28 +266,68 @@ class _VisualHomeScreenState extends State<VisualHomeScreen>
       },
       child: Scaffold(
         backgroundColor: AppColors.visualBackground,
-        body: SafeArea(
-          child: FadeTransition(
-            opacity: _fadeController,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Header
-                _buildHeader(),
+        body: Stack(
+          children: [
+            SafeArea(
+              child: FadeTransition(
+                opacity: _fadeController,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Header
+                    _buildHeader(),
 
-                // Welcome message
-                _buildWelcomeSection(),
+                    // Welcome message
+                    _buildWelcomeSection(),
 
-                // Feature grid
-                Expanded(
-                  child: _buildFeatureGrid(),
+                    // Feature grid
+                    Expanded(
+                      child: _buildFeatureGrid(),
+                    ),
+
+                    // Bottom info
+                    _buildBottomInfo(),
+                  ],
                 ),
-
-                // Bottom info
-                _buildBottomInfo(),
-              ],
+              ),
             ),
-          ),
+
+            // Floating AI Assistant Button
+            Positioned(
+              right: 20,
+              bottom: 100,
+              child: _buildFloatingAIButton(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFloatingAIButton() {
+    return GestureDetector(
+      onTap: () {
+        HapticFeedback.mediumImpact();
+        AIAssistantPopup.show(context, isAudioMode: false);
+      },
+      child: Container(
+        width: 60,
+        height: 60,
+        decoration: BoxDecoration(
+          gradient: AppColors.visualPrimaryGradient,
+          borderRadius: BorderRadius.circular(30),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.visualPrimary.withOpacity(0.4),
+              blurRadius: 16,
+              spreadRadius: 2,
+            ),
+          ],
+        ),
+        child: const Icon(
+          Icons.auto_awesome,
+          color: Colors.white,
+          size: 26,
         ),
       ),
     );

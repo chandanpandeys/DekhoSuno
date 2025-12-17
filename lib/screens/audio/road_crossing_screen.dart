@@ -27,6 +27,9 @@ class _RoadCrossingScreenState extends State<RoadCrossingScreen>
   String _instruction = 'Initializing...';
   List<String> _vehicles = [];
 
+  // Two-finger tap detection
+  int _pointerCount = 0;
+
   @override
   void initState() {
     super.initState();
@@ -229,49 +232,98 @@ class _RoadCrossingScreenState extends State<RoadCrossingScreen>
       );
     }
 
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: _statusColor, width: 4),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          CameraPreview(_service.cameraController!),
-          // Analyzing overlay
-          if (_service.isAnalyzing)
-            Container(
-              color: Colors.black38,
-              child: const Center(
-                child: CircularProgressIndicator(
-                  color: Colors.white,
-                  strokeWidth: 3,
+    return Semantics(
+      label: "Camera preview. Tap with two fingers for instant safety check.",
+      child: Listener(
+        onPointerDown: (event) {
+          _pointerCount++;
+        },
+        onPointerUp: (event) {
+          // Check if this was a two-finger tap (2 fingers were down)
+          if (_pointerCount >= 2) {
+            HapticFeedback.heavyImpact();
+            _tts.speak("Checking...");
+            _service.checkNow();
+          }
+          _pointerCount--;
+          if (_pointerCount < 0) _pointerCount = 0;
+        },
+        onPointerCancel: (event) {
+          _pointerCount--;
+          if (_pointerCount < 0) _pointerCount = 0;
+        },
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 16),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(color: _statusColor, width: 4),
+          ),
+          clipBehavior: Clip.antiAlias,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              CameraPreview(_service.cameraController!),
+              // Two-finger tap hint
+              Positioned(
+                bottom: 16,
+                left: 0,
+                right: 0,
+                child: Center(
+                  child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: Colors.black54,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.touch_app, color: Colors.white, size: 16),
+                        SizedBox(width: 6),
+                        Text(
+                          "Two-finger tap for instant check",
+                          style: TextStyle(color: Colors.white, fontSize: 12),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
-            ),
-          // Vehicle detection overlay
-          if (_vehicles.isNotEmpty)
-            Positioned(
-              top: 16,
-              left: 16,
-              right: 16,
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                decoration: BoxDecoration(
-                  color: Colors.black54,
-                  borderRadius: BorderRadius.circular(12),
+              // Analyzing overlay
+              if (_service.isAnalyzing)
+                Container(
+                  color: Colors.black38,
+                  child: const Center(
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 3,
+                    ),
+                  ),
                 ),
-                child: Text(
-                  "Detected: ${_vehicles.join(', ')}",
-                  style: const TextStyle(color: Colors.white, fontSize: 14),
-                  textAlign: TextAlign.center,
+              // Vehicle detection overlay
+              if (_vehicles.isNotEmpty)
+                Positioned(
+                  top: 16,
+                  left: 16,
+                  right: 16,
+                  child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: Colors.black54,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      "Detected: ${_vehicles.join(', ')}",
+                      style: const TextStyle(color: Colors.white, fontSize: 14),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
                 ),
-              ),
-            ),
-        ],
+            ],
+          ),
+        ),
       ),
     );
   }

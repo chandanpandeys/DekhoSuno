@@ -12,14 +12,14 @@ class GeminiService {
       throw Exception('GEMINI_API_KEY not found in .env');
     }
 
-    // Use Gemini 2.5 Flash for all models for speed and multimodal capabilities
+    // Use Gemini 2.5 Flash Lite - fastest model for realtime accessibility features
     _visionModel = GenerativeModel(
-      model: 'gemini-2.5-flash',
+      model: 'gemini-2.5-flash-lite',
       apiKey: apiKey,
     );
 
     _textModel = GenerativeModel(
-      model: 'gemini-2.5-flash',
+      model: 'gemini-2.5-flash-lite',
       apiKey: apiKey,
     );
   }

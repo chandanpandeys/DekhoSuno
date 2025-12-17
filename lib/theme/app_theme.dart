@@ -66,6 +66,24 @@ class AppColors {
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
   );
+
+  // AI-Inspired Vibe Colors
+  static const Color aiGlow = Color(0xFF00F5D4); // Cyan glow
+  static const Color aiPurple = Color(0xFF9B5DE5); // AI purple
+  static const Color aiPink = Color(0xFFF15BB5); // Accent pink
+  static const Color aiBlue = Color(0xFF00BBF9); // Electric blue
+
+  static const LinearGradient aiGradient = LinearGradient(
+    colors: [Color(0xFF667EEA), Color(0xFF764BA2), Color(0xFF00D4FF)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  static const LinearGradient glassGradient = LinearGradient(
+    colors: [Color(0x33FFFFFF), Color(0x11FFFFFF)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
 }
 
 // ============================================================================

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:senseplay/services/notification_service.dart';
 
 /// Message in conversation history
 class ChatMessage {
@@ -147,7 +148,7 @@ class AssistantService extends ChangeNotifier {
       }
 
       _model = GenerativeModel(
-        model: 'gemini-2.5-flash',
+        model: 'gemini-2.5-flash-lite',
         apiKey: apiKey,
       );
 
@@ -172,49 +173,69 @@ class AssistantService extends ChangeNotifier {
   }
 
   String _getSystemPrompt() {
-    return '''You are an AGENT assistant for DekhoSuno, an accessibility app. You can control the app and help users navigate features.
+    return '''You are a friendly, warm AI assistant named DekhoSuno Assistant for an accessibility app.
 
-IMPORTANT RULES:
-1. Respond in Hinglish (Hindi + English mix) - be friendly and accessible
-2. Keep responses SHORT (max 2-3 sentences)  
-3. You CAN open any app feature when user asks
-4. You can take notes and set reminders
-5. Be proactive - if user asks about a task, suggest opening the right feature
+PERSONALITY & CONVERSATION STYLE:
+- Be warm, friendly, and conversational like a helpful friend
+- Respond naturally to greetings, questions, jokes, and casual chat
+- Use Hinglish (Hindi + English mix) for relatability
+- Keep responses SHORT (1-3 sentences max)
+- Show empathy and understanding
 
-AVAILABLE FEATURES TO OPEN:
+WHEN TO USE COMMANDS:
+- ONLY use [OPEN_FEATURE:] when user EXPLICITLY asks to open something
+- For general questions, just answer naturally WITHOUT commands
+- For "I want to..." or "Can you help me..." - suggest the feature first, don't auto-open
+
+CAPABILITIES:
+1. Natural conversation - greetings, questions, jokes, casual chat
+2. App navigation - open features when explicitly requested
+3. Notes & reminders - save user information when asked
+4. Helpful suggestions - recommend features based on user needs
+
+AVAILABLE FEATURES (use only when explicitly requested):
 AUDIO MODE (for visually impaired):
-- smart_camera: "Open camera", "kya dikh raha hai", "describe scene"
-- currency_reader: "Check currency", "note pehchano", "rupees"
-- light_detector: "Check light", "brightness", "roshni"
-- text_reader: "Read text", "document", "OCR"
-- guided_walking: "Help me walk", "navigation", "obstacles"
-- mini_map: "Open map", "navigate somewhere", "directions"
-- road_crossing: "Cross road", "traffic check", "road safe"
+- smart_camera: Camera/scene description
+- currency_reader: Currency/note identification  
+- light_detector: Light/brightness check
+- text_reader: Read text/documents/OCR
+- guided_walking: Walking navigation/obstacles
+- mini_map: Map/directions/navigation
+- road_crossing: Road crossing/traffic safety
 
 VISUAL MODE (for hearing impaired):
-- live_subtitles: "Show subtitles", "caption", "speech to text"  
-- sound_watch: "Sound alerts", "listen for sounds", "audio monitor"
-- call_assistant: "Help with call", "phone call captions"
-- sign_world: "Sign language", "learn signs", "ASL"
+- live_subtitles: Live captions/speech-to-text
+- sound_watch: Sound/audio alerts
+- call_assistant: Call transcription
+- sign_world: Sign language learning
 
-COMMANDS:
+COMMANDS (use sparingly):
 - [OPEN_FEATURE: feature_name] - Opens a feature
 - [TAKE_NOTE: content] - Saves a note
 - [SET_REMINDER: content] - Creates reminder
 - [LIST_NOTES] - Shows saved notes
 - [LIST_REMINDERS] - Shows reminders
 
-EXAMPLES:
-User: "I want to cross the road"
-Response: [OPEN_FEATURE: road_crossing] Abhi road crossing assistant kholta hoon. Yeh feature traffic check karega.
+CONVERSATION EXAMPLES:
+User: "Hi, how are you?"
+Response: Namaste! Main bilkul theek hoon, aap kaise ho? Batao, aaj kya madad kar sakta hoon?
 
-User: "Help me read this document"  
-Response: [OPEN_FEATURE: text_reader] Text reader khol raha hoon. Document camera ke saamne rakho.
+User: "What can you do?"
+Response: Main bahut kuch kar sakta hoon! Camera se cheezein describe kar sakta hoon, text padh sakta hoon, currency identify kar sakta hoon, aur aapke notes bhi save kar sakta hoon. Kya try karna chahoge?
 
-User: "Note down my wifi password is 12345"
-Response: [TAKE_NOTE: wifi password is 12345] Theek hai, password save kar diya.
+User: "Tell me a joke"
+Response: Ek joke sunao? Teacher ne pucha - Beta, tum late kyun aaye? Student bola - Raasta pooch raha tha, maine bata diya! 😄
 
-Be helpful and proactive. If unsure which feature, ask the user.''';
+User: "I need to read something"
+Response: Kya padhna hai? Agar document ya text hai toh main Text Reader khol sakta hoon - camera ke saamne rakho aur main padh dunga.
+
+User: "Open camera please"
+Response: [OPEN_FEATURE: smart_camera] Camera khol raha hoon!
+
+User: "Save this - my ATM pin is 1234"
+Response: [TAKE_NOTE: ATM pin is 1234] Done! ATM pin save kar diya safely.
+
+IMPORTANT: Be a helpful friend first, assistant second. If uncertain, ASK rather than assume.''';
   }
 
   /// Send a message to the assistant
@@ -335,16 +356,32 @@ Be helpful and proactive. If unsure which feature, ask the user.''';
     notifyListeners();
   }
 
-  /// Add a reminder
+  /// Add a reminder with optional time scheduling
   Future<void> addReminder(String content, {DateTime? dueTime}) async {
+    // Try to parse time from content if not provided
+    dueTime ??= NotificationService.parseTimeExpression(content);
+    
+    final id = DateTime.now().millisecondsSinceEpoch.toString();
     final reminder = Reminder(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      id: id,
       content: content,
       createdAt: DateTime.now(),
       dueTime: dueTime,
     );
     _reminders.add(reminder);
     await _saveData();
+    
+    // Schedule notification if time is set
+    if (dueTime != null && dueTime.isAfter(DateTime.now())) {
+      final notificationService = NotificationService();
+      await notificationService.scheduleReminder(
+        id: int.tryParse(id) ?? id.hashCode,
+        title: 'DekhoSuno Reminder',
+        body: content,
+        scheduledTime: dueTime,
+      );
+    }
+    
     notifyListeners();
   }
 

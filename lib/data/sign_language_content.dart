@@ -19,6 +19,7 @@ class SignInfo {
   final String name;
   final String hindiName;
   final String description;
+  final String hindiDescription; // Hindi description for accessibility
   final String emoji;
   final String? videoUrl; // For future video tutorials
 
@@ -26,6 +27,7 @@ class SignInfo {
     required this.name,
     required this.hindiName,
     required this.description,
+    this.hindiDescription = '', // Optional - empty for backward compatibility
     required this.emoji,
     this.videoUrl,
   });
@@ -44,131 +46,157 @@ class SignLanguageContent {
             name: "A",
             hindiName: "ए",
             description: "Make a fist with thumb on the side",
+            hindiDescription: "मुट्ठी बनाओ, अंगूठा बाहर की तरफ",
             emoji: "🅰️"),
         SignInfo(
             name: "B",
             hindiName: "बी",
             description: "Flat hand, fingers together, thumb tucked in",
+            hindiDescription: "सपाट हाथ, उंगलियां साथ, अंगूठा अंदर",
             emoji: "🅱️"),
         SignInfo(
             name: "C",
             hindiName: "सी",
             description: "Curved hand like the letter C",
+            hindiDescription: "हाथ को C अक्षर जैसा मोड़ो",
             emoji: "©️"),
         SignInfo(
             name: "D",
             hindiName: "डी",
             description: "Index finger up, other fingers touch thumb",
+            hindiDescription: "तर्जनी ऊपर, बाकी उंगलियां अंगूठे को छुएं",
             emoji: "🇩"),
         SignInfo(
             name: "E",
             hindiName: "ई",
             description: "Fingertips touch thumb, curved fingers",
+            hindiDescription: "उंगलियों की नोक अंगूठे को छुए, मुड़ी हुई",
             emoji: "🇪"),
         SignInfo(
             name: "F",
             hindiName: "एफ",
             description: "Index and thumb form circle, other fingers up",
+            hindiDescription: "तर्जनी और अंगूठे से गोला, बाकी ऊपर",
             emoji: "🇫"),
         SignInfo(
             name: "G",
             hindiName: "जी",
             description: "Index finger pointing sideways, thumb parallel",
+            hindiDescription: "तर्जनी बगल में इशारा, अंगूठा समानांतर",
             emoji: "🇬"),
         SignInfo(
             name: "H",
             hindiName: "एच",
             description: "Index and middle finger horizontal",
+            hindiDescription: "तर्जनी और मध्यमा क्षैतिज",
             emoji: "🇭"),
         SignInfo(
             name: "I",
             hindiName: "आई",
             description: "Pinky finger up, other fingers in fist",
+            hindiDescription: "छोटी उंगली ऊपर, बाकी मुट्ठी में",
             emoji: "🇮"),
         SignInfo(
             name: "J",
             hindiName: "जे",
             description: "Pinky up, draw J shape in air",
+            hindiDescription: "छोटी उंगली ऊपर, हवा में J बनाओ",
             emoji: "🇯"),
         SignInfo(
             name: "K",
             hindiName: "के",
             description: "Index and middle finger up in V, thumb between",
+            hindiDescription: "V में तर्जनी-मध्यमा, अंगूठा बीच में",
             emoji: "🇰"),
         SignInfo(
             name: "L",
             hindiName: "एल",
             description: "L shape with index finger and thumb",
+            hindiDescription: "तर्जनी और अंगूठे से L बनाओ",
             emoji: "🇱"),
         SignInfo(
             name: "M",
             hindiName: "एम",
             description: "Fingers over thumb, three bumps on top",
+            hindiDescription: "उंगलियां अंगूठे पर, तीन उभार ऊपर",
             emoji: "🇲"),
         SignInfo(
             name: "N",
             hindiName: "एन",
             description: "Fingers over thumb, two bumps on top",
+            hindiDescription: "उंगलियां अंगूठे पर, दो उभार ऊपर",
             emoji: "🇳"),
         SignInfo(
             name: "O",
             hindiName: "ओ",
             description: "Fingers curved to touch thumb, circle shape",
+            hindiDescription: "उंगलियां मोड़कर अंगूठे को छुएं, गोल आकार",
             emoji: "🇴"),
         SignInfo(
             name: "P",
             hindiName: "पी",
             description: "Like K but pointing down",
+            hindiDescription: "K जैसा पर नीचे की ओर",
             emoji: "🇵"),
         SignInfo(
             name: "Q",
             hindiName: "क्यू",
             description: "Like G but pointing down",
+            hindiDescription: "G जैसा पर नीचे की ओर",
             emoji: "🇶"),
         SignInfo(
             name: "R",
             hindiName: "आर",
             description: "Index and middle finger crossed",
+            hindiDescription: "तर्जनी और मध्यमा क्रॉस",
             emoji: "🇷"),
         SignInfo(
             name: "S",
             hindiName: "एस",
             description: "Fist with thumb over fingers",
+            hindiDescription: "मुट्ठी, अंगूठा उंगलियों के ऊपर",
             emoji: "🇸"),
         SignInfo(
             name: "T",
             hindiName: "टी",
             description: "Fist with thumb between index and middle finger",
+            hindiDescription: "मुट्ठी, अंगूठा तर्जनी-मध्यमा के बीच",
             emoji: "🇹"),
         SignInfo(
             name: "U",
             hindiName: "यू",
             description: "Index and middle finger up together",
+            hindiDescription: "तर्जनी और मध्यमा साथ ऊपर",
             emoji: "🇺"),
         SignInfo(
             name: "V",
             hindiName: "वी",
             description: "Index and middle finger in V shape",
+            hindiDescription: "तर्जनी और मध्यमा V आकार में",
             emoji: "🇻"),
         SignInfo(
             name: "W",
             hindiName: "डब्ल्यू",
             description: "Index, middle, and ring finger up in W",
+            hindiDescription: "तर्जनी, मध्यमा, अनामिका W में ऊपर",
             emoji: "🇼"),
         SignInfo(
             name: "X",
             hindiName: "एक्स",
             description: "Index finger hooked",
+            hindiDescription: "तर्जनी हुक जैसी मुड़ी",
             emoji: "🇽"),
         SignInfo(
             name: "Y",
             hindiName: "वाई",
             description: "Thumb and pinky extended like Y",
+            hindiDescription: "अंगूठा और छोटी उंगली Y जैसे फैली",
             emoji: "🇾"),
         SignInfo(
             name: "Z",
             hindiName: "ज़ेड",
             description: "Index finger draws Z in air",
+            hindiDescription: "तर्जनी से हवा में Z बनाओ",
             emoji: "🇿"),
       ],
     ),

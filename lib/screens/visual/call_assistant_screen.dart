@@ -135,31 +135,87 @@ class _CallAssistantScreenState extends State<CallAssistantScreen>
   Widget _buildPhoneDialer() {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppColors.visualSurface,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: AppShadows.small,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: AppShadows.medium,
       ),
-      child: Row(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Expanded(
-            child: TextField(
-              controller: _phoneController,
-              keyboardType: TextInputType.phone,
-              style: const TextStyle(color: AppColors.visualText, fontSize: 18),
-              decoration: InputDecoration(
-                hintText: 'Enter phone number',
-                hintStyle: TextStyle(color: AppColors.visualTextMuted),
-                prefixIcon:
-                    const Icon(Icons.phone, color: AppColors.visualPrimary),
-                border: InputBorder.none,
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-              ),
+          // Number display
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: AppColors.visualBackground,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    _phoneController.text.isEmpty
+                        ? 'Enter number'
+                        : _phoneController.text,
+                    style: TextStyle(
+                      color: _phoneController.text.isEmpty
+                          ? AppColors.visualTextMuted
+                          : AppColors.visualText,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: 2,
+                    ),
+                  ),
+                ),
+                if (_phoneController.text.isNotEmpty)
+                  GestureDetector(
+                    onTap: () {
+                      HapticFeedback.lightImpact();
+                      setState(() {
+                        if (_phoneController.text.isNotEmpty) {
+                          _phoneController.text = _phoneController.text
+                              .substring(0, _phoneController.text.length - 1);
+                        }
+                      });
+                    },
+                    onLongPress: () {
+                      HapticFeedback.heavyImpact();
+                      setState(() {
+                        _phoneController.clear();
+                      });
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      child: const Icon(
+                        Icons.backspace_outlined,
+                        color: AppColors.visualTextMuted,
+                        size: 24,
+                      ),
+                    ),
+                  ),
+              ],
             ),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(height: 16),
+          // Number pad grid
+          GridView.count(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            crossAxisCount: 3,
+            mainAxisSpacing: 8,
+            crossAxisSpacing: 8,
+            childAspectRatio: 1.5,
+            children: [
+              ..._buildDialerButtons(['1', '2', '3']),
+              ..._buildDialerButtons(['4', '5', '6']),
+              ..._buildDialerButtons(['7', '8', '9']),
+              ..._buildDialerButtons(['*', '0', '#']),
+            ],
+          ),
+          const SizedBox(height: 16),
+          // Call button
           Semantics(
             label: "Make call",
             button: true,
@@ -172,12 +228,13 @@ class _CallAssistantScreenState extends State<CallAssistantScreen>
                 }
               },
               child: Container(
-                padding: const EdgeInsets.all(14),
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 16),
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
                     colors: [AppColors.success, Color(0xFF16A34A)],
                   ),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
                       color: AppColors.success.withOpacity(0.4),
@@ -186,10 +243,20 @@ class _CallAssistantScreenState extends State<CallAssistantScreen>
                     ),
                   ],
                 ),
-                child: const Icon(
-                  Icons.call,
-                  color: Colors.white,
-                  size: 24,
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.call, color: Colors.white, size: 24),
+                    SizedBox(width: 12),
+                    Text(
+                      "Call",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -197,6 +264,39 @@ class _CallAssistantScreenState extends State<CallAssistantScreen>
         ],
       ),
     );
+  }
+
+  List<Widget> _buildDialerButtons(List<String> digits) {
+    return digits.map((digit) {
+      return Semantics(
+        label: "Dial $digit",
+        button: true,
+        child: GestureDetector(
+          onTap: () {
+            HapticFeedback.selectionClick();
+            setState(() {
+              _phoneController.text += digit;
+            });
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              color: AppColors.visualBackground,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Center(
+              child: Text(
+                digit,
+                style: const TextStyle(
+                  color: AppColors.visualText,
+                  fontSize: 28,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    }).toList();
   }
 
   Widget _buildHeader() {

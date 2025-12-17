@@ -467,7 +467,7 @@ class _SignWorldScreenState extends State<SignWorldScreen>
               ),
               const SizedBox(height: 16),
 
-              // Description
+              // English Description
               Container(
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
@@ -493,6 +493,37 @@ class _SignWorldScreenState extends State<SignWorldScreen>
                   ],
                 ),
               ),
+
+              // Hindi Description if available
+              if (sign.hindiDescription.isNotEmpty) ...[
+                const SizedBox(height: 10),
+                Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: AppColors.visualPrimary.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.translate_rounded,
+                        color: AppColors.visualPrimary,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          sign.hindiDescription,
+                          style: AppTypography.bodyMedium.copyWith(
+                            color: AppColors.visualPrimary,
+                            fontFamily: 'Noto Sans Devanagari',
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ],
           ),
         );
