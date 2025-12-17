@@ -79,3 +79,12 @@ app.*.map-json
 
 # Environment variables
 .env
+
+# Debug and log files
+*.log
+analysis*.txt
+build_errors.txt
+doctor*.txt
+pub_*.txt
+run_log.txt
+flutter_*.log
